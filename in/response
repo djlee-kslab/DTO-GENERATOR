@@ -1,0 +1,8 @@
+                        <Column id="ADMIN_PTTN_CD_NM" type="string" size="32"/>
+                        <Column id="LTCP_CLSFC_CD" type="string" size="32"/>
+                        <Column id="IS_UNITY_OAH_ADMIN" type="string" size="32"/>
+                        <Column id="LTC_ADMIN_SYM" type="string" size="32"/>
+                        <Column id="ADMIN_PTTN_CD" type="string" size="32"/>
+                        <Column id="LTCP_CLSFC_CD_NM" type="string" size="32"/>
+                        <Column id="TEST_YN" type="string" size="32"/>
+                        <Column id="_ROW_STATUS" type="string" size="32"/>

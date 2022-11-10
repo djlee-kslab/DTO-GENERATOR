@@ -18,104 +18,201 @@ import java.util.regex.Pattern;
 @SpringBootApplication
 public class DtoAndDictionaryGenerator {
 
-    private static final List<String> annotations = new ArrayList<>();
-    private static final List<String> members = new ArrayList<>();
-    private static final List<String> fields = new ArrayList<>();
-    private static final List<String> columns = new ArrayList<>();
+    //request
+    private static final List<String> requestAnnotations = new ArrayList<>();
+    private static final List<String> requestMembers = new ArrayList<>();
+    private static final List<String> requestFields = new ArrayList<>();
+    private static final List<String> requestColumns = new ArrayList<>();
+
+    //response
+    private static final List<String> responseAnnotations = new ArrayList<>();
+    private static final List<String> responseMembers = new ArrayList<>();
+    private static final List<String> responseFields = new ArrayList<>();
+    private static final List<String> responseColumns = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
-        BufferedReader reader;
-        File memberOutput = new File("out/members");
-        File fieldOutput = new File("out/fields");
-        File columnOutput = new File("out/columns");
-        FileOutputStream memberOs = new FileOutputStream(memberOutput);
-        FileOutputStream fieldOs = new FileOutputStream(fieldOutput);
-        FileOutputStream columnOs = new FileOutputStream(columnOutput);
-        BufferedWriter memberWriter = new BufferedWriter(new OutputStreamWriter(memberOs));
-        BufferedWriter fieldWriter = new BufferedWriter(new OutputStreamWriter(fieldOs));
-        BufferedWriter columnWriter = new BufferedWriter(new OutputStreamWriter(columnOs));
+        BufferedReader requestReader;
+        File requestMemberOutput = new File("out/request/members");
+        File requestFieldOutput = new File("out/request/fields");
+        File requestColumnOutput = new File("out/request/columns");
+        FileOutputStream requestMemberOs = new FileOutputStream(requestMemberOutput);
+        FileOutputStream requestFieldOs = new FileOutputStream(requestFieldOutput);
+        FileOutputStream requestColumnOs = new FileOutputStream(requestColumnOutput);
+        BufferedWriter requestMemberWriter = new BufferedWriter(new OutputStreamWriter(requestMemberOs));
+        BufferedWriter requestFieldWriter = new BufferedWriter(new OutputStreamWriter(requestFieldOs));
+        BufferedWriter requestColumnWriter = new BufferedWriter(new OutputStreamWriter(requestColumnOs));
+
+        BufferedReader responseReader;
+        File responseMemberOutput = new File("out/response/members");
+        File responseFieldOutput = new File("out/response/fields");
+        File responseColumnOutput = new File("out/response/columns");
+        FileOutputStream responseMemberOs = new FileOutputStream(responseMemberOutput);
+        FileOutputStream responseFieldOs = new FileOutputStream(responseFieldOutput);
+        FileOutputStream responseColumnOs = new FileOutputStream(responseColumnOutput);
+        BufferedWriter responseMemberWriter = new BufferedWriter(new OutputStreamWriter(responseMemberOs));
+        BufferedWriter responseFieldWriter = new BufferedWriter(new OutputStreamWriter(responseFieldOs));
+        BufferedWriter responseColumnWriter = new BufferedWriter(new OutputStreamWriter(responseColumnOs));
 
         try {
             if (args.length != 0) {
-                reader = new BufferedReader(new FileReader(args[0]));
+                requestReader = new BufferedReader(new FileReader(args[0]));
+                responseReader = new BufferedReader(new FileReader(args[1]));
             } else {
-                reader = new BufferedReader(new FileReader("resource"));
+                requestReader = new BufferedReader(new FileReader("in/request"));
+                responseReader = new BufferedReader(new FileReader("in/response"));
             }
-            String line = reader.readLine();
-            while (line != null) {
-                if (line.stripLeading().startsWith("<Column")) {
+
+            // request
+            String requestByLine = requestReader.readLine();
+            while (requestByLine != null) {
+                if (requestByLine.stripLeading().startsWith("<Column")) {
                     Pattern pattern = Pattern.compile("Column id=\"(.*?)\"");
-                    Matcher matcher = pattern.matcher(line);
+                    Matcher matcher = pattern.matcher(requestByLine);
                     if (matcher.find())
-                        line = matcher.group(1);
+                        requestByLine = matcher.group(1);
                 }
 
-                buildAnnotations(line);
-                buildMembers(line);
-                buildFields(line);
-                buildColumns(line);
-                line = reader.readLine();
+                buildRequestAnnotations(requestByLine);
+                buildRequestMembers(requestByLine);
+                buildRequestFields(requestByLine);
+                buildRequestColumns(requestByLine);
+                requestByLine = requestReader.readLine();
+            }
+
+            // response
+            String responseByLine = responseReader.readLine();
+            while (responseByLine != null) {
+                if (responseByLine.stripLeading().startsWith("<Column")) {
+                    Pattern pattern = Pattern.compile("Column id=\"(.*?)\"");
+                    Matcher matcher = pattern.matcher(responseByLine);
+                    if (matcher.find())
+                        responseByLine = matcher.group(1);
+                }
+
+                buildResponseAnnotations(responseByLine);
+                buildResponseMembers(responseByLine);
+                buildResponseFields(responseByLine);
+                buildResponseColumns(responseByLine);
+                responseByLine = responseReader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        for (int i = 0; i < annotations.size(); i++) {
+        for (int i = 0; i < requestAnnotations.size(); i++) {
             // write member
-            memberWriter.write(annotations.get(i));
-            memberWriter.newLine();
-            memberWriter.write(members.get(i));
-            memberWriter.newLine();
-            memberWriter.newLine();
+            requestMemberWriter.write(requestAnnotations.get(i));
+            requestMemberWriter.newLine();
+            requestMemberWriter.write(requestMembers.get(i));
+            requestMemberWriter.newLine();
+            requestMemberWriter.newLine();
 
             // write field
-            fieldWriter.write(fields.get(i));
-            fieldWriter.newLine();
-            fieldWriter.newLine();
+            requestFieldWriter.write(requestFields.get(i));
+            requestFieldWriter.newLine();
+            requestFieldWriter.newLine();
 
             // write columns
-            columnWriter.write(columns.get(i));
-            columnWriter.newLine();
+            requestColumnWriter.write(requestColumns.get(i));
+            requestColumnWriter.newLine();
         }
 
-        memberWriter.close();
-        fieldWriter.close();
-        columnWriter.close();
+        for (int i = 0; i < responseAnnotations.size(); i++) {
+            // write member
+            responseMemberWriter.write(responseAnnotations.get(i));
+            responseMemberWriter.newLine();
+            responseMemberWriter.write(responseMembers.get(i));
+            responseMemberWriter.newLine();
+            responseMemberWriter.newLine();
+
+            // write field
+            responseFieldWriter.write(responseFields.get(i));
+            responseFieldWriter.newLine();
+            responseFieldWriter.newLine();
+
+            // write columns
+            responseColumnWriter.write(responseColumns.get(i));
+            responseColumnWriter.newLine();
+        }
+
+        requestMemberWriter.close();
+        requestFieldWriter.close();
+        requestColumnWriter.close();
+
+        responseMemberWriter.close();
+        responseFieldWriter.close();
+        responseColumnWriter.close();
+
         System.out.println("SUCCESS");
     }
 
-    private static void buildFields(String line) {
+    private static void buildRequestAnnotations(String line) {
+        if (line.startsWith("_")) {
+            line = line.substring(1);
+        }
+        requestAnnotations.add("@JsonProperty(LongtermXmlFieldName." + line + ")");
+    }
+
+    private static void buildRequestFields(String line) {
         String line2 = line;
         if (line.startsWith("_")) {
             line2 = line.substring(1);
         }
-        fields.add("public static final String " + line2 + " = \"" + line + "\";");
+        requestFields.add("public static final String " + line2 + " = \"" + line + "\";");
     }
 
-    private static void buildAnnotations(String line) {
-        if (line.startsWith("_")) {
-            line = line.substring(1);
-        }
-        annotations.add("@JsonProperty(LongtermXmlFieldName." + line + ")");
-    }
-
-    private static void buildMembers(String line) {
+    private static void buildRequestMembers(String line) {
         if (line.startsWith("_")) {
             line = line.substring(1);
         }
         if (line.endsWith("_YN")) {
             line = "IS_" + line.substring(0, line.length() - 3);
-            members.add("private boolean " + CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, line) + ";");
+            requestMembers.add("private boolean " + CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, line) + ";");
         } else {
-            members.add("private String " + CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, line) + ";");
+            requestMembers.add("private String " + CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, line) + ";");
         }
     }
 
-    private static void buildColumns(String line) {
+    private static void buildRequestColumns(String line) {
         if (line.startsWith("_")) {
             line = line.substring(1);
         }
-        columns.add("LongtermXmlFieldName." + line + ",");
+        requestColumns.add("LongtermXmlFieldName." + line + ",");
     }
-}
 
+
+    private static void buildResponseAnnotations(String line) {
+        if (line.startsWith("_")) {
+            line = line.substring(1);
+        }
+        responseAnnotations.add("@JsonProperty(LongtermXmlFieldName." + line + ")");
+    }
+
+    private static void buildResponseFields(String line) {
+        String line2 = line;
+        if (line.startsWith("_")) {
+            line2 = line.substring(1);
+        }
+        responseFields.add("public static final String " + line2 + " = \"" + line + "\";");
+    }
+
+    private static void buildResponseMembers(String line) {
+        if (line.startsWith("_")) {
+            line = line.substring(1);
+        }
+        if (line.endsWith("_YN")) {
+            line = "IS_" + line.substring(0, line.length() - 3);
+            responseMembers.add("private Boolean " + CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, line) + ";");
+        } else {
+            responseMembers.add("private String " + CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, line) + ";");
+        }
+    }
+
+    private static void buildResponseColumns(String line) {
+        if (line.startsWith("_")) {
+            line = line.substring(1);
+        }
+        responseColumns.add("LongtermXmlFieldName." + line + ",");
+    }
+
+}

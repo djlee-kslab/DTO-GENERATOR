@@ -1,0 +1,17 @@
+			<Column id="LTCO_MGMT_SYM" type="STRING" size="256" />
+			<Column id="LTC_ADMIN_SYM" type="STRING" size="256" />
+			<Column id="EXM_RECV_NO" type="STRING" size="256" />
+			<Column id="LTCP_OFFR_YYYYMM" type="STRING" size="256" />
+			<Column id="LTCP_OFFR_YYYYMM_FR" type="STRING" size="256" />
+			<Column id="LTCP_OFFR_YYYYMM_TO" type="STRING" size="256" />
+			<Column id="LTCP_CLSFC_CD" type="STRING" size="256" />
+			<Column id="LTCP_DMD_TYPE_CD" type="STRING" size="256" />
+			<Column id="SEARCH_COND" type="STRING" size="256" />
+			<Column id="LTCP_DMD_STAT_CD" type="STRING" size="256" />
+			<Column id="LTCP_TO_DT" type="STRING" size="256" />
+			<Column id="DMD_MDM_TYPE_CD" type="STRING" size="256" />
+			<Column id="LTC_MGMT_NO" type="STRING" size="256" />
+			<Column id="SEARCH_TYPE" type="STRING" size="256" />
+			<Column id="ADMIN_PTTN_CD" type="STRING" size="256" />
+			<Column id="TEST_YN" type="STRING" size="256" />
+			<Column id="HOT_KEY_YN" type="STRING" size="256" />

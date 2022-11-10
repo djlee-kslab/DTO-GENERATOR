@@ -1,1 +1,0 @@
-LTC_MGMT_NO
