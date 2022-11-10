@@ -165,14 +165,7 @@ public class DtoAndDictionaryGenerator {
         if (line.startsWith("_")) {
             line = line.substring(1);
         }
-        if (line.endsWith("_YN")) {
-            line = "IS_" + line.substring(0, line.length() - 3);
-        }
-        if (line.startsWith("IS_")) {
-            requestMembers.add("private boolean " + CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, line) + ";");
-        } else {
-            requestMembers.add("private String " + CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, line) + ";");
-        }
+        requestMembers.add("private String " + CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, line) + ";");
     }
 
     private static void buildRequestColumns(String line) {
@@ -202,14 +195,8 @@ public class DtoAndDictionaryGenerator {
         if (line.startsWith("_")) {
             line = line.substring(1);
         }
-        if (line.endsWith("_YN")) {
-            line = "IS_" + line.substring(0, line.length() - 3);
-        }
-        if (line.startsWith("IS_")) {
-            responseMembers.add("private Boolean " + CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, line) + ";");
-        } else {
-            responseMembers.add("private String " + CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, line) + ";");
-        }
+
+        responseMembers.add("private String " + CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, line) + ";");
     }
 
     private static void buildResponseColumns(String line) {
